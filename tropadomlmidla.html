@@ -1,0 +1,1143 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      /* оболочка, которую артефакт добавляет при публикации */
+      :root { color-scheme: light dark; }
+      body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 14px; background: #fbfbfa; }
+      img { max-width: 100%; }
+      [hidden] { display: none !important; }
+    </style>
+<title>Тропа до ML-мидла</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Unbounded:wght@600&display=swap">
+<style>
+:root{
+  --bg:#EEF1F0;
+  --surface:#FFFFFF;
+  --surface-2:#F5F7F6;
+  --ink:#101A18;
+  --ink-2:#33413E;
+  --muted:#5F706C;
+  --hair:#D6DEDB;
+  --hair-2:#E5EBE9;
+  --blaze:#B4462F;
+  --blaze-soft:rgba(180,70,47,.10);
+  --blaze-ink:#8E3523;
+  --gate:#1E5F52;
+  --gate-soft:rgba(30,95,82,.10);
+  --cv:#2E6F9E; --nlp:#6A5AA6; --gen:#1B8A6B; --spc:#A34A79; --ds:#6C8722; --ops:#55636F;
+  --shadow:0 1px 2px rgba(16,26,24,.05), 0 8px 24px -16px rgba(16,26,24,.25);
+  --r:14px;
+  --sans:"Golos Text","Segoe UI",Roboto,-apple-system,Helvetica,Arial,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --display:"Unbounded","Golos Text",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1413;
+    --surface:#161F1D;
+    --surface-2:#1B2523;
+    --ink:#E8EFEC;
+    --ink-2:#C3D0CC;
+    --muted:#90A29D;
+    --hair:#28332F;
+    --hair-2:#212B29;
+    --blaze:#E2735A;
+    --blaze-soft:rgba(226,115,90,.13);
+    --blaze-ink:#F0937D;
+    --gate:#5FBFA8;
+    --gate-soft:rgba(95,191,168,.12);
+    --cv:#7FB6DC; --nlp:#AA9BE0; --gen:#58C4A2; --spc:#E092B6; --ds:#ACC862; --ops:#A6B6C4;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 30px -18px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1413;
+  --surface:#161F1D;
+  --surface-2:#1B2523;
+  --ink:#E8EFEC;
+  --ink-2:#C3D0CC;
+  --muted:#90A29D;
+  --hair:#28332F;
+  --hair-2:#212B29;
+  --blaze:#E2735A;
+  --blaze-soft:rgba(226,115,90,.13);
+  --blaze-ink:#F0937D;
+  --gate:#5FBFA8;
+  --gate-soft:rgba(95,191,168,.12);
+  --cv:#7FB6DC; --nlp:#AA9BE0; --gen:#58C4A2; --spc:#E092B6; --ds:#ACC862; --ops:#A6B6C4;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 30px -18px rgba(0,0,0,.8);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:var(--sans); font-size:16px; line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--blaze-ink); text-decoration:none; border-bottom:1px solid color-mix(in srgb, var(--blaze) 35%, transparent)}
+a:hover{border-bottom-color:var(--blaze)}
+:focus-visible{outline:2px solid var(--blaze); outline-offset:3px; border-radius:4px}
+code{font-family:var(--mono); font-size:.86em; background:var(--surface-2); border:1px solid var(--hair-2); padding:.06em .34em; border-radius:5px; white-space:nowrap}
+strong{font-weight:600}
+
+.shell{max-width:1220px; margin:0 auto; padding:0 20px 96px; display:grid; grid-template-columns:1fr; gap:0}
+@media (min-width:1060px){
+  .shell{grid-template-columns:248px minmax(0,1fr); gap:56px; padding:0 32px 120px}
+}
+
+/* ---------- masthead ---------- */
+.mast{grid-column:1/-1; padding:56px 0 34px; border-bottom:1px solid var(--hair); display:grid; gap:30px}
+@media (min-width:900px){
+  .mast{grid-template-columns:minmax(0,1fr) 330px; gap:56px; align-items:center}
+  .mast-main{grid-column:1}
+  .mast > .pcard{grid-column:2}
+}
+.eyebrow{font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted)}
+h1{
+  font-family:var(--sans); font-weight:700; font-size:clamp(34px,6vw,60px);
+  line-height:1.02; letter-spacing:-.025em; margin:14px 0 0; text-wrap:balance;
+}
+.stand{margin:18px 0 0; max-width:60ch; font-size:17.5px; color:var(--ink-2)}
+.principles{display:grid; gap:10px; max-width:62ch; margin-top:28px}
+.principle{display:grid; grid-template-columns:auto 1fr; gap:12px; align-items:baseline; font-size:14.5px; color:var(--ink-2)}
+.principle b{font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--blaze); font-weight:500; white-space:nowrap}
+
+/* ---------- progress card ---------- */
+.pcard{
+  display:grid; grid-template-columns:auto minmax(0,1fr);
+  grid-template-areas:"ring big" "ctl ctl"; gap:12px 16px; align-items:center;
+  background:var(--surface); border:1px solid var(--hair); border-radius:var(--r);
+  padding:18px 20px; box-shadow:var(--shadow);
+}
+.ring{grid-area:ring; position:relative; width:74px; height:74px; flex:none}
+.ring svg{transform:rotate(-90deg); display:block}
+.ring circle{fill:none; stroke-width:7; stroke-linecap:round}
+.ring .track{stroke:var(--hair)}
+.ring .val{stroke:var(--blaze); transition:stroke-dashoffset .45s cubic-bezier(.4,0,.2,1), opacity .2s}
+.ring b{
+  position:absolute; inset:0; display:grid; place-items:center;
+  font-family:var(--mono); font-size:15px; font-weight:500; font-variant-numeric:tabular-nums;
+}
+.pcard .big{grid-area:big; align-self:center; font-size:14.5px; color:var(--ink-2)}
+.pcard .big b{font-variant-numeric:tabular-nums; color:var(--ink)}
+.controls{grid-area:ctl; align-self:start; display:flex; flex-wrap:wrap; gap:7px}
+button.ctl{
+  font:inherit; font-size:12.5px; font-family:var(--mono); cursor:pointer;
+  background:var(--surface-2); color:var(--ink-2); border:1px solid var(--hair);
+  padding:5px 11px; border-radius:999px; transition:background .15s,border-color .15s,color .15s;
+}
+button.ctl:hover{border-color:var(--blaze); color:var(--blaze-ink)}
+button.ctl[aria-pressed="true"]{background:var(--blaze-soft); border-color:var(--blaze); color:var(--blaze-ink)}
+
+/* ---------- rail ---------- */
+.rail{display:none}
+@media (min-width:1060px){
+  .rail{display:block; position:sticky; top:0; align-self:start; padding:36px 0 40px; max-height:100vh; overflow-y:auto; scrollbar-width:thin}
+  .rail::-webkit-scrollbar{width:6px}
+  .rail::-webkit-scrollbar-thumb{background:var(--hair); border-radius:3px}
+}
+.rail h2{font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); font-weight:500; margin:0 0 14px}
+.rail ol{list-style:none; margin:0 0 22px; padding:0; position:relative}
+.rail ol::before{content:""; position:absolute; left:9px; top:10px; bottom:10px; width:1px; background:var(--hair)}
+.rail li{position:relative}
+.rail a.rlink{
+  display:grid; grid-template-columns:20px 1fr; gap:10px; align-items:start;
+  padding:6px 0; font-size:13.5px; line-height:1.32; color:var(--muted);
+  border-bottom:0; transition:color .15s;
+}
+.rail a.rlink:hover{color:var(--ink)}
+.rail a.rlink .dot{
+  width:11px; height:11px; margin:4px 0 0 4px; border-radius:50%;
+  border:1.5px solid var(--hair); background:var(--bg); position:relative; z-index:1;
+  transition:border-color .2s, background .2s;
+}
+.rail a.rlink[data-state="part"] .dot{border-color:var(--blaze)}
+.rail a.rlink[data-state="full"] .dot{border-color:var(--blaze); background:var(--blaze)}
+.rail a.rlink.active{color:var(--ink); font-weight:600}
+.rail a.rlink .pct{font-family:var(--mono); font-size:10.5px; color:var(--muted); font-variant-numeric:tabular-nums; font-weight:400}
+.rail .extras a{display:block; padding:5px 0 5px 30px; font-size:13.5px; color:var(--muted); border-bottom:0}
+.rail .extras a:hover{color:var(--ink)}
+.rail .extras a.active{color:var(--ink); font-weight:600}
+
+/* ---------- main ---------- */
+main{min-width:0; padding-top:36px}
+.note{
+  background:var(--surface); border:1px solid var(--hair); border-left:3px solid var(--blaze);
+  border-radius:0 var(--r) var(--r) 0; padding:16px 20px; margin:0 0 40px; font-size:15px; color:var(--ink-2); max-width:74ch;
+}
+.note b{color:var(--ink)}
+
+.wp{
+  background:var(--surface); border:1px solid var(--hair); border-radius:var(--r);
+  margin:0 0 16px; box-shadow:var(--shadow); overflow:hidden;
+}
+.wp > summary{
+  list-style:none; cursor:pointer; padding:20px 22px; display:grid;
+  grid-template-columns:auto 1fr auto; gap:18px; align-items:start;
+}
+.wp > summary::-webkit-details-marker{display:none}
+.wp > summary:hover .wtitle{color:var(--blaze-ink)}
+.num{
+  font-family:var(--display); font-size:26px; line-height:1; color:var(--hair);
+  font-variant-numeric:tabular-nums; letter-spacing:-.02em; padding-top:2px; transition:color .2s;
+}
+.wp[open] .num, .wp:hover .num{color:var(--blaze)}
+.whead{min-width:0}
+.wtitle{font-size:19.5px; font-weight:600; letter-spacing:-.015em; margin:0; text-wrap:balance; transition:color .15s}
+.wlede{margin:6px 0 0; font-size:14.5px; color:var(--muted); max-width:62ch}
+.wp-side{display:grid; gap:7px; justify-items:end; padding-top:4px}
+.bar{width:78px; height:5px; border-radius:3px; background:var(--hair); overflow:hidden}
+.bar i{display:block; height:100%; background:var(--blaze); border-radius:3px; transition:width .4s cubic-bezier(.4,0,.2,1)}
+.count{font-family:var(--mono); font-size:10.5px; color:var(--muted); font-variant-numeric:tabular-nums}
+.chev{color:var(--muted); font-size:12px; font-family:var(--mono)}
+.wbody{padding:2px 22px 24px; border-top:1px solid var(--hair-2); margin-top:2px}
+
+.block{padding-top:20px}
+.block h4{
+  font-family:var(--mono); font-size:11px; letter-spacing:.13em; text-transform:uppercase;
+  color:var(--muted); font-weight:500; margin:0 0 10px;
+}
+ul.items{list-style:none; margin:0; padding:0; display:grid; gap:2px}
+.item{
+  display:grid; grid-template-columns:auto 1fr; gap:11px; align-items:start;
+  padding:6px 8px 6px 6px; border-radius:8px; cursor:pointer; font-size:15px; color:var(--ink-2);
+  transition:background .12s;
+}
+.item:hover{background:var(--surface-2)}
+.item input,.proj input{position:absolute; opacity:0; width:1px; height:1px}
+.tick{
+  width:17px; height:17px; margin-top:3px; border-radius:5px; border:1.5px solid var(--hair);
+  background:var(--surface); flex:none; position:relative; transition:background .15s,border-color .15s;
+}
+.tick::after{
+  content:""; position:absolute; left:5px; top:1.5px; width:4px; height:9px;
+  border:solid var(--surface); border-width:0 2px 2px 0; transform:rotate(42deg) scale(.5);
+  opacity:0; transition:opacity .15s, transform .15s;
+}
+.item:hover .tick{border-color:var(--blaze)}
+.item.done .tick,.proj.done .tick{background:var(--blaze); border-color:var(--blaze)}
+.item.done .tick::after,.proj.done .tick::after{opacity:1; transform:rotate(42deg) scale(1)}
+.item.done .txt{color:var(--muted); text-decoration:line-through; text-decoration-color:var(--hair); text-decoration-thickness:1px}
+.item input:focus-visible ~ .tick,.proj input:focus-visible ~ .tick{outline:2px solid var(--blaze); outline-offset:2px}
+
+.gate{
+  margin-top:24px; background:var(--gate-soft); border:1px solid color-mix(in srgb, var(--gate) 28%, transparent);
+  border-radius:var(--r); padding:16px 18px;
+}
+.gate h4{color:var(--gate); margin-bottom:4px}
+.gate .hint{font-size:13.5px; color:var(--ink-2); margin:0 0 10px; max-width:66ch}
+.gate .item:hover{background:color-mix(in srgb, var(--gate) 8%, transparent)}
+.gate .item .tick{border-color:color-mix(in srgb, var(--gate) 40%, transparent)}
+.gate .item:hover .tick{border-color:var(--gate)}
+.gate .item.done .tick{background:var(--gate); border-color:var(--gate)}
+
+.projects{display:grid; gap:10px; margin-top:6px}
+.proj{
+  background:var(--surface-2); border:1px solid var(--hair-2); border-radius:10px; padding:12px 14px;
+  display:grid; grid-template-columns:auto 1fr; gap:11px; align-items:start; cursor:pointer;
+}
+.proj:hover{border-color:var(--blaze)}
+.proj:hover .tick{border-color:var(--blaze)}
+.proj .ptxt b{display:block; font-size:14.5px; font-weight:600; color:var(--ink); margin-bottom:2px}
+.proj .ptxt span{font-size:14px; color:var(--ink-2)}
+.proj.done .ptxt b{color:var(--muted); text-decoration:line-through; text-decoration-color:var(--hair)}
+
+.res{margin-top:24px; padding-top:16px; border-top:1px dashed var(--hair)}
+.res h4{font-family:var(--mono); font-size:11px; letter-spacing:.13em; text-transform:uppercase; color:var(--muted); font-weight:500; margin:0 0 10px}
+.res ul{list-style:none; margin:0; padding:0; display:grid; gap:7px}
+.res li{font-size:14.5px; display:grid; grid-template-columns:auto 1fr; gap:9px; align-items:baseline}
+.res li::before{content:"→"; color:var(--hair); font-family:var(--mono); font-size:12px}
+.res .rn{color:var(--muted); font-size:13.5px}
+
+/* ---------- tasting station ---------- */
+.station{margin:44px 0 16px}
+.station-head{display:grid; grid-template-columns:auto 1fr; gap:18px; align-items:start; margin-bottom:6px}
+.station-head .num{color:var(--blaze)}
+.station-head h3{font-size:22px; font-weight:700; letter-spacing:-.02em; margin:0}
+.station-head p{margin:8px 0 0; font-size:15px; color:var(--ink-2); max-width:64ch}
+.tracks{display:grid; gap:14px; margin-top:22px; align-items:start}
+@media (min-width:720px){.tracks{grid-template-columns:1fr 1fr}}
+.track{
+  background:var(--surface); border:1px solid var(--hair); border-radius:var(--r);
+  box-shadow:var(--shadow); overflow:hidden; border-top:3px solid var(--c);
+}
+.track > summary{list-style:none; cursor:pointer; padding:16px 18px}
+.track > summary::-webkit-details-marker{display:none}
+.track .tname{display:flex; align-items:baseline; gap:9px; flex-wrap:wrap}
+.track .tname h4{font-size:17px; font-weight:600; margin:0; letter-spacing:-.01em; color:var(--ink)}
+.track .tname .tag{font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--c)}
+.track .tlede{margin:7px 0 0; font-size:14px; color:var(--muted)}
+.track .trow{display:flex; align-items:center; gap:10px; margin-top:11px}
+.track .bar i{background:var(--c)}
+.track .tick{border-color:var(--hair)}
+.track .item:hover .tick{border-color:var(--c)}
+.track .item.done .tick,.track .proj.done .tick{background:var(--c); border-color:var(--c)}
+.track .proj:hover{border-color:var(--c)}
+.track .proj:hover .tick{border-color:var(--c)}
+.track .tbody{padding:0 18px 18px; border-top:1px solid var(--hair-2); margin-top:12px}
+.signal{
+  margin-top:16px; font-size:14px; color:var(--ink-2); background:var(--surface-2);
+  border-radius:10px; padding:11px 13px; border:1px solid var(--hair-2);
+}
+.signal b{font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--c); display:block; margin-bottom:3px; font-weight:500}
+
+/* ---------- extras ---------- */
+.extra{margin-top:16px}
+.extra h3{font-size:19.5px; font-weight:600; letter-spacing:-.015em; margin:0}
+.plain{list-style:none; margin:10px 0 0; padding:0; display:grid; gap:9px}
+.plain li{font-size:15px; color:var(--ink-2); display:grid; grid-template-columns:auto 1fr; gap:11px; align-items:baseline}
+.plain li::before{content:"×"; color:var(--blaze); font-family:var(--mono); font-size:13px}
+.plain.pos li::before{content:"+"; color:var(--gate)}
+
+.sect-title{
+  font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--muted); margin:52px 0 16px; padding-bottom:8px; border-bottom:1px solid var(--hair);
+}
+footer{margin-top:56px; padding-top:20px; border-top:1px solid var(--hair); font-size:13.5px; color:var(--muted); max-width:70ch}
+
+.hide-done .item.done{display:none}
+.hide-done .proj.done{display:none}
+.hide-done .block:not(:has(.item:not(.done))):not(:has(.proj:not(.done))){display:none}
+@media (prefers-reduced-motion:reduce){*{transition:none!important; animation:none!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="mast">
+   <div class="mast-main">
+    <div class="eyebrow">роадмап · без сроков, по гейтам</div>
+    <h1>Тропа до ML-мидла</h1>
+    <p class="stand">Путь от «Python знаю слабо» до инженера, которому отдают размытую задачу и не проверяют каждый шаг. Восемь уровней, шесть доменов на пробу и один принцип: уровень закрыт не когда прошло время, а когда закрыт гейт.</p>
+      <div class="principles">
+        <div class="principle"><b>гейт</b><span>Каждый уровень заканчивается проверкой «умею», а не «прошёл». Не закрывается — возвращайся, а не иди дальше.</span></div>
+        <div class="principle"><b>руки</b><span>На каждом уровне есть проект, который живёт в репозитории. Ноутбук без README не считается.</span></div>
+        <div class="principle"><b>проба</b><span>CV, NLP, GenAI, речь, аналитика, MLOps — по одному мини-проекту в каждом, чтобы выбрать своё не по статьям, а по ощущению от отладки.</span></div>
+      </div>
+   </div>
+      <div class="pcard">
+        <div class="ring">
+          <svg width="74" height="74" viewBox="0 0 74 74" aria-hidden="true">
+            <circle class="track" cx="37" cy="37" r="31"></circle>
+            <circle class="val" id="ringVal" cx="37" cy="37" r="31" stroke-dasharray="194.8" stroke-dashoffset="194.8"></circle>
+          </svg>
+          <b id="ringPct">0%</b>
+        </div>
+        <div class="big">Пройдено <b id="doneN">0</b> из <b id="totalN">0</b> пунктов</div>
+        <div class="controls">
+          <button class="ctl" id="btnHide" aria-pressed="false">Скрыть пройденное</button>
+          <button class="ctl" id="btnAll">Развернуть всё</button>
+          <button class="ctl" id="btnReset">Сбросить</button>
+        </div>
+      </div>
+  </header>
+
+  <nav class="rail" aria-label="Навигация по уровням">
+    <h2>Маршрут</h2>
+    <ol id="railList"></ol>
+    <h2>Сквозное</h2>
+    <div class="extras" id="railExtras"></div>
+  </nav>
+
+  <main>
+    <div class="note">
+      <b>Как пользоваться.</b> Галочки сохраняются в этом браузере — можно закрывать и возвращаться. Сроков и дедлайнов здесь намеренно нет: один человек закроет уровень «Данные» быстро, другой застрянет на оконных функциях, и это нормально. Единственная валюта прогресса — закрытые гейты и лежащие в репозитории проекты.
+    </div>
+    <div id="route"></div>
+    <div id="extras"></div>
+    <footer>
+      Собрано под старт «слабая база Python» и цель «уверенный мидл, широкий профиль». Порядок уровней — рекомендация, а не закон: математику держи фоном, а дегустацию доменов можно начать раньше, если очень чешется. Единственное, что ломает маршрут по-настоящему, — прыжок к трансформерам без честной валидации и без умения отладить обычный градиентный спуск.
+    </footer>
+  </main>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ============================ ДАННЫЕ ============================ */
+
+var WAYPOINTS = [
+{
+ id:'wp1', num:'01', title:'Руки: Python, который не подводит',
+ lede:'Пока язык — препятствие, всё остальное будет учиться в три раза медленнее. Цель уровня: код перестал быть проблемой.',
+ blocks:[
+  {h:'Язык', items:[
+   'Типы и структуры: списки, словари, множества, кортежи — и когда что брать (поиск в списке против словаря)',
+   'Срезы, распаковка, `enumerate`, `zip`, comprehension-ы вместо циклов с `append`',
+   'Функции: аргументы по умолчанию (и ловушка с изменяемым дефолтом), `*args/**kwargs`, области видимости',
+   'Исключения: `try/except/finally`, свои классы ошибок, почему голый `except:` — зло',
+   'Генераторы и `yield`: как обработать файл на 10 ГБ, не съев память',
+   'ООП по минимуму: класс, `__init__`, `__repr__`, `@dataclass`, когда класс не нужен',
+   'Контекстные менеджеры (`with`), аннотации типов, f-строки',
+   'Стандартная библиотека: `pathlib`, `json`, `csv`, `collections`, `itertools`, `datetime`, `re`, `argparse`, `logging`'
+  ]},
+  {h:'Гигиена кода', items:[
+   'PEP 8 и автоформат: `ruff` (линтер + форматтер) в редакторе и в pre-commit',
+   'Читать трейсбек снизу вверх и находить причину, а не гуглить текст ошибки целиком',
+   'Отладка через `breakpoint()` и точки останова, а не через сорок `print`',
+   'Первые тесты на `pytest`: три теста лучше нуля'
+  ]},
+  {h:'Окружение и git', items:[
+   'Терминал: `cd/ls/cp/mv`, пайпы, `grep`, `find`, `head/tail`, права, переменные окружения',
+   'Изоляция окружений: `uv` (или venv+pip), `pyproject.toml`, лок-файл, `.env` и секреты вне репозитория',
+   'Jupyter — для исследования, `.py`-модули — для всего, что переживёт один вечер',
+   'Git: коммит, ветка, merge, разрешение конфликта, `.gitignore`, pull request, чтение `git log` и `git diff`'
+  ]}
+ ],
+ projects:[
+  {h:'CLI-утилита на GitHub', d:'Что угодно полезное лично тебе: парсер расписания, переименователь фоток, сборщик отчёта из CSV. Обязательно: аргументы через `argparse`, логирование, README с примером запуска, 3 теста, история из осмысленных коммитов.'}
+ ],
+ gate:[
+  'Пишу 200 строк рабочего кода, не гугля синтаксис',
+  'По чужому трейсбеку нахожу причину за минуты',
+  'С нуля поднимаю окружение, репозиторий и запускаю чужой проект по README',
+  'Понимаю, почему мой код лежит в модуле, а не в ячейке ноутбука'
+ ],
+ res:[
+  {t:'«Поколение Python»: курс для начинающих', u:'https://stepik.org/course/58852/promo', n:'Stepik, бесплатно, с автопроверкой — лучший старт на русском'},
+  {t:'Automate the Boring Stuff', u:'https://automatetheboringstuff.com/', n:'бесплатно онлайн, про прикладной Python'},
+  {t:'MIT Missing Semester', u:'https://missing.csail.mit.edu/', n:'терминал, git, инструменты — то, чему не учат на курсах'},
+  {t:'Learn Git Branching', u:'https://learngitbranching.js.org/?locale=ru_RU', n:'git через интерактивную визуализацию'},
+  {t:'uv', u:'https://docs.astral.sh/uv/', n:'современный менеджер окружений и пакетов'}
+ ]
+},
+{
+ id:'wp2', num:'02', title:'Данные: numpy, pandas, SQL',
+ lede:'80% времени ML-инженера — это данные. Здесь ставится скорость: от сырого файла до понятной таблицы и до выводов.',
+ blocks:[
+  {h:'numpy', items:[
+   '`ndarray`, `dtype`, оси; векторизация вместо циклов — и разница по времени на своём примере',
+   'Broadcasting: правила и типичные ошибки формы',
+   'Индексация масками, `where`, `argsort`, `reshape`, агрегации по `axis`',
+   '`np.random` с фиксированным `seed` — воспроизводимость с первого дня'
+  ]},
+  {h:'pandas', items:[
+   'Чтение больших файлов: `dtype`, `usecols`, `chunksize`, память датафрейма',
+   '`loc` против `iloc`, булевы маски, `query`, цепочки методов вместо промежуточных переменных',
+   '`groupby` + `agg` + `transform`, `merge` (и все типы join), `pivot`/`melt`',
+   'Пропуски, дубликаты, категориальный тип, даты и таймзоны',
+   'Почему `apply` по строкам — обычно ошибка, и чем его заменить'
+  ]},
+  {h:'SQL', items:[
+   '`SELECT/WHERE/GROUP BY/HAVING`, все виды `JOIN`, `UNION`',
+   'Подзапросы и CTE (`WITH`) — как разбить сложный запрос на читаемые шаги',
+   'Оконные функции: `ROW_NUMBER`, `RANK`, `LAG/LEAD`, `SUM() OVER` — на собеседовании спросят',
+   'Индексы и `EXPLAIN` на уровне «понимаю, почему запрос тормозит»'
+  ]},
+  {h:'Визуализация и EDA', items:[
+   'matplotlib через `fig, ax` (а не магию `plt`), seaborn для быстрых срезов',
+   'Что видно на гистограмме, боксплоте, скаттере — и что они скрывают',
+   'Дисциплина EDA: сначала вопрос, потом график; смотреть на сырые строки; искать «слишком хорошо, чтобы быть правдой»'
+  ]}
+ ],
+ projects:[
+  {h:'Исследование одного датасета', d:'Взять публичные данные (лучше про то, что тебе интересно) и довести до ноутбука с 8–10 обоснованными выводами, из которых хотя бы один — неожиданный. Финал: README с тремя графиками и текстом на страницу, понятным человеку не из ML.'}
+ ],
+ gate:[
+  'Из сырого CSV делаю чистый датафрейм и пять обоснованных выводов за вечер',
+  'Пишу SQL с оконной функцией без подсказок',
+  'Объясняю, почему конкретный график именно такой, и что он не показывает',
+  'Замечаю в чужом ноутбуке молчаливую потерю строк после `merge`'
+ ],
+ res:[
+  {t:'Python for Data Analysis, 3-е изд.', u:'https://wesmckinney.com/book/', n:'бесплатно онлайн, от автора pandas'},
+  {t:'SQLBolt', u:'https://sqlbolt.com/', n:'SQL в браузере, с нуля'},
+  {t:'PostgreSQL Exercises', u:'https://pgexercises.com/', n:'задачи, включая оконные функции'},
+  {t:'Kaggle Learn', u:'https://www.kaggle.com/learn', n:'короткие практические модули по pandas и визуализации'}
+ ]
+},
+{
+ id:'wp3', num:'03', title:'Математика ровно по делу',
+ lede:'Этот уровень идёт фоном: не жди, пока закроешь его целиком, чтобы начать обучать модели. Но без него ты навсегда останешься на уровне «подставил библиотеку».',
+ blocks:[
+  {h:'Линейная алгебра', items:[
+   'Вектор, матрица, умножение как преобразование пространства (а не как правило из учебника)',
+   'Скалярное произведение как мера похожести — это ровно то, на чём работает поиск по эмбеддингам',
+   'Нормы L1/L2 и их связь с регуляризацией',
+   'Ранг, обратимость, собственные векторы на уровне интуиции; SVD и PCA как «главные направления разброса»'
+  ]},
+  {h:'Матанализ и оптимизация', items:[
+   'Производная и частные производные, градиент как направление роста',
+   'Цепное правило — это и есть backprop, разобрать до конца',
+   'Градиентный спуск руками на numpy: шаг, скорость обучения, расходимость',
+   'Выпуклость, локальные минимумы, стохастический градиент — зачем батчи'
+  ]},
+  {h:'Вероятность и статистика', items:[
+   'Случайная величина, распределения: Бернулли, биномиальное, нормальное, Пуассона',
+   'Матожидание, дисперсия, ковариация, корреляция (и почему корреляция ≠ причинность)',
+   'Условная вероятность и формула Байеса',
+   'ЦПТ и закон больших чисел: почему среднее ведёт себя предсказуемо',
+   'Доверительные интервалы, проверка гипотез, p-value — и что p-value НЕ означает',
+   'Бутстрап: универсальный способ получить интервал, когда формулу не помнишь',
+   'Метод максимального правдоподобия — откуда берутся функции потерь'
+  ]}
+ ],
+ projects:[
+  {h:'Линейная регрессия с нуля', d:'Только numpy: своя реализация градиентного спуска, вывод формулы градиента MSE на бумаге, сравнение с аналитическим решением и с sklearn. Приложить график падения ошибки при трёх разных скоростях обучения.'}
+ ],
+ gate:[
+  'Вывожу градиент MSE для линейной регрессии на листе бумаги',
+  'Объясняю на пальцах, почему p = 0.04 — это не «вероятность того, что гипотеза верна»',
+  'За десять минут считаю бутстрап-интервал на numpy',
+  'Читаю формулу из статьи и понимаю, что там происходит с размерностями'
+ ],
+ res:[
+  {t:'3Blue1Brown: Essence of Linear Algebra', u:'https://www.3blue1brown.com/topics/linear-algebra', n:'лучшая визуальная интуиция, есть русские субтитры'},
+  {t:'Mathematics for Machine Learning', u:'https://mml-book.github.io/', n:'книга бесплатно, ровно нужный объём'},
+  {t:'Учебник ШАД по машинному обучению', u:'https://education.yandex.ru/handbook/ml', n:'на русском, строго и без воды'},
+  {t:'StatQuest', u:'https://www.youtube.com/@statquest', n:'статистика и ML простыми словами'},
+  {t:'Seeing Theory', u:'https://seeing-theory.brown.edu/', n:'интерактивная вероятность'}
+ ]
+},
+{
+ id:'wp4', num:'04', title:'Классический ML: скучно, но именно за это платят',
+ lede:'Большая часть продовых задач — это таблички и бустинг, а не нейросети. Тут же ставится главный навык: честная валидация.',
+ blocks:[
+  {h:'Постановка и валидация', items:[
+   'Перевод задачи бизнеса в задачу ML: что предсказываем, на чём учимся, какая метрика решает',
+   'Baseline первым делом: константа, правило, простая модель — всё остальное сравнивается с ним',
+   'Train/val/test, кросс-валидация, стратификация; сплит по времени для временных данных; group split',
+   'Утечки данных: через таргет, через агрегаты, через препроцессинг до сплита, через дубликаты — уметь ловить'
+  ]},
+  {h:'Модели', items:[
+   'Линейная и логистическая регрессия, регуляризация L1/L2, интерпретация коэффициентов',
+   'kNN и наивный Байес — как быстрые бейзлайны',
+   'Решающее дерево, случайный лес, бэггинг',
+   'Градиентный бустинг: LightGBM, CatBoost, XGBoost — и почему это до сих пор король табличных данных',
+   'Основные гиперпараметры бустинга и что реально влияет на качество'
+  ]},
+  {h:'Метрики и ошибки', items:[
+   'Accuracy и почему она врёт на дисбалансе',
+   'Precision, recall, F1, выбор порога под цену ошибки',
+   'ROC-AUC против PR-AUC: когда какая честнее',
+   'Logloss и калибровка вероятностей',
+   'RMSE, MAE, MAPE и их поведение на выбросах',
+   'Разбор ошибок: смотреть на худшие предсказания руками'
+  ]},
+  {h:'Признаки', items:[
+   'Кодирование категорий, target encoding и его утечка через фолды',
+   'Масштабирование, пропуски, выбросы; признаки из дат, координат, текста',
+   '`Pipeline` и `ColumnTransformer` — чтобы препроцессинг не утёк на тест',
+   'Важности признаков и SHAP: объяснить решение модели человеку',
+   'Дисбаланс классов: веса, сэмплирование, изменение порога'
+  ]},
+  {h:'Без учителя', items:[
+   'k-means, DBSCAN, иерархическая кластеризация — и как оценивать результат',
+   'PCA и UMAP для сжатия и визуализации',
+   'Поиск аномалий: Isolation Forest, простые статистические правила'
+  ]}
+ ],
+ projects:[
+  {h:'Табличный проект от и до', d:'Своя или редкая задача (не Титаник): sklearn `Pipeline`, честная валидация, сравнение трёх моделей, отчёт по метрикам с доверительными интервалами, раздел «где модель ошибается и почему».'},
+  {h:'Соревнование на Kaggle', d:'Одно соревнование, доведённое до конца своими руками: попасть в верхнюю треть лидерборда без слепого копирования чужих ноутбуков. Ценность не в медали, а в разборе того, что дало прирост.'}
+ ],
+ gate:[
+  'Собираю рабочий baseline за час',
+  'Нахожу утечку в чужом решении и объясняю, чем она опасна',
+  'Осознанно выбираю метрику под задачу и защищаю выбор',
+  'Не путаю `fit` и `transform` на тестовой выборке — никогда'
+ ],
+ res:[
+  {t:'ML Zoomcamp', u:'https://github.com/DataTalksClub/machine-learning-zoomcamp', n:'бесплатный практический курс с дедлайнами по желанию'},
+  {t:'ISLP: Introduction to Statistical Learning (Python)', u:'https://www.statlearning.com/', n:'книга бесплатно, лучшая теория для начала'},
+  {t:'Hands-On ML (Géron)', u:'https://github.com/ageron/handson-ml3', n:'классика, ноутбуки в открытом доступе'},
+  {t:'mlcourse.ai', u:'https://mlcourse.ai/', n:'открытый курс ODS на русском и английском'},
+  {t:'scikit-learn User Guide', u:'https://scikit-learn.org/stable/user_guide.html', n:'читать как учебник, а не как справочник'}
+ ]
+},
+{
+ id:'wp5', num:'05', title:'Глубокое обучение и PyTorch',
+ lede:'Здесь важно не количество архитектур, а способность обучить сеть и понять, почему она не учится.',
+ blocks:[
+  {h:'Основы фреймворка', items:[
+   'Тензоры: устройство, `device`, `dtype`, перенос на GPU',
+   '`autograd` и граф вычислений: что такое `.backward()` на самом деле',
+   '`Dataset` и `DataLoader`, свои трансформации, `collate_fn`',
+   'Обучающий цикл руками: forward → loss → backward → step → `zero_grad`',
+   'Режимы `train`/`eval`, `torch.no_grad()`, сохранение и загрузка чекпоинтов'
+  ]},
+  {h:'Как сети учатся', items:[
+   'MLP и backprop, разобранный до умножений (micrograd Карпатого)',
+   'Инициализация весов, затухающие и взрывающиеся градиенты',
+   'BatchNorm, LayerNorm, dropout, weight decay',
+   'Оптимизаторы: SGD с моментом, Adam/AdamW; расписания скорости обучения и warmup',
+   'Смешанная точность, накопление градиентов, обрезка градиентов',
+   'Функции потерь и что они означают вероятностно'
+  ]},
+  {h:'Диагностика — главный навык', items:[
+   'Сначала переобучить один батч до нуля: если не выходит — баг, а не данные',
+   'Кривые обучения: недообучение, переобучение, слишком большая скорость, битая нормализация',
+   'NaN в лоссе: типичные причины и как локализовать',
+   'Фиксация seed, конфиги вместо магических чисел, журнал экспериментов (W&B, MLflow, TensorBoard)',
+   'Бесплатные GPU: Kaggle и Colab; батч-сайз против памяти'
+  ]}
+ ],
+ projects:[
+  {h:'Сеть с нуля на своей задаче', d:'Свой датасет, свой training loop без высокоуровневых обёрток, таблица минимум из десяти экспериментов с выводом, что дало прирост. Отдельный файл `train.py` и конфиг — не ноутбук.'},
+  {h:'Воспроизвести чужой результат', d:'Взять статью или репозиторий и повторить заявленную метрику ±небольшая дельта. Это отдельный навык, который на собеседовании ценится выше, чем набор пройденных курсов.'}
+ ],
+ gate:[
+  'Пишу training loop с нуля, без копипасты',
+  'За 15 минут понимаю, почему лосс не падает',
+  'Веду журнал экспериментов и могу воспроизвести любой из них',
+  'Объясняю, зачем нужен warmup и что делает AdamW'
+ ],
+ res:[
+  {t:'Karpathy: Neural Networks — Zero to Hero', u:'https://karpathy.ai/zero-to-hero.html', n:'от micrograd до GPT, руками; обязательное'},
+  {t:'A Recipe for Training Neural Networks', u:'https://karpathy.github.io/2019/04/25/recipe/', n:'короткий пост, который сэкономит месяцы'},
+  {t:'Dive into Deep Learning (d2l.ai)', u:'https://d2l.ai/', n:'книга с кодом на PyTorch, бесплатно'},
+  {t:'Practical Deep Learning for Coders (fast.ai)', u:'https://course.fast.ai/', n:'практика с первого урока'},
+  {t:'PyTorch Tutorials', u:'https://pytorch.org/tutorials/', n:'официальные, начинать с «Learn the Basics»'}
+ ]
+},
+{
+ id:'wp7', num:'07', title:'Инженерная зрелость',
+ lede:'Разница между «умею обучать модели» и «мне можно доверить сервис». Это уровень, который чаще всего и отделяет джуна от мидла.',
+ blocks:[
+  {h:'Код, который переживёт тебя', items:[
+   'Структура проекта: `src/`, конфиги, скрипты, тесты; ноутбуки только как черновик',
+   'Конфигурация через файлы (Hydra, pydantic-settings), никаких путей в коде',
+   'Логирование вместо print, уровни логов, читаемые сообщения об ошибках',
+   'Типизация и `mypy` по вкусу, `ruff` и pre-commit обязательно',
+   'Тесты для ML: на данные (схема, диапазоны), на пайплайн (запускается), на поведение модели (инвариант не ломается)',
+   'Код-ревью: как читать чужой PR и как оформить свой'
+  ]},
+  {h:'Воспроизводимость', items:[
+   'Seed, лок-файлы зависимостей, зафиксированные версии данных (DVC или просто хеши и версии в хранилище)',
+   'Docker: свой образ для обучения и для инференса; тонкости с CUDA',
+   'Реестр моделей и экспериментов (MLflow): что за модель сейчас в проде и на чём училась',
+   'Проверка: другой человек запускает твой проект одной командой'
+  ]},
+  {h:'Данные и производительность', items:[
+   'Контракты данных и валидация схем (pandera, Great Expectations)',
+   'Пайплайны и оркестрация: Airflow / Prefect / Dagster — хотя бы один руками',
+   'Батч-инференс против онлайн; очереди; идемпотентность и бэкфилы',
+   'Профилирование, векторизация, батчинг запросов, кэш',
+   'Ускорение инференса: квантизация, ONNX, компиляция — и замер, а не вера'
+  ]},
+  {h:'Надёжность и деньги', items:[
+   'Таймауты, ретраи, деградация до простой модели вместо падения',
+   'Метрики сервиса: p50/p95 латентность, ошибки, насыщение; логи и алерты',
+   'Стоимость обучения и инференса на 1000 запросов — уметь назвать цифру'
+  ]}
+ ],
+ projects:[
+  {h:'Свою лучшую модель — в сервис', d:'Docker + FastAPI + тесты + CI на GitHub Actions + логи и метрики + нагрузочный тест. В README: p95 латентность, потребление памяти, стоимость на 1000 запросов и что сломается при десятикратном росте нагрузки.'}
+ ],
+ gate:[
+  'Мой проект поднимается у другого человека одной командой',
+  'Есть тест, который реально ловил поломку (не «для галочки»)',
+  'Называю p95 латентность и стоимость своего сервиса по памяти',
+  'Могу откатить модель на предыдущую версию за минуты'
+ ],
+ res:[
+  {t:'MLOps Zoomcamp', u:'https://github.com/DataTalksClub/mlops-zoomcamp', n:'бесплатный курс целиком с проектом'},
+  {t:'Made With ML', u:'https://madewithml.com/', n:'от ноутбука до продакшена, с кодом'},
+  {t:'Designing Machine Learning Systems (Chip Huyen)', u:'https://huyenchip.com/books/', n:'книга-ориентир по ML-системам'},
+  {t:'Full Stack Deep Learning', u:'https://fullstackdeeplearning.com/', n:'лекции про инженерную часть ML'}
+ ]
+},
+{
+ id:'wp8', num:'08', title:'Мышление мидла: системы, а не модели',
+ lede:'Финальный уровень: тебя оценивают не по коду, а по решениям. Что строим, чего не строим, чем меряем, когда останавливаемся.',
+ blocks:[
+  {h:'От задачи к системе', items:[
+   'Перевод «хотим меньше оттока» в измеримую ML-постановку — или обоснованный ответ «здесь ML не нужен»',
+   'ML System Design: требования → данные → метрики офлайн и онлайн → baseline → модель → сервинг → мониторинг → переобучение. Уметь нарисовать за 40 минут',
+   'Разрыв между офлайн-метрикой и продуктовым эффектом; guardrail-метрики',
+   'Выкатка моделей: shadow, канареечный, A/B; когда честный A/B невозможен и что делать',
+   'Дрейф данных и таргета, деградация, политика переобучения, разбор инцидента без поиска виноватых'
+  ]},
+  {h:'Ответственность', items:[
+   'Персональные данные, лицензии на данные и модели, что нельзя тащить в прод',
+   'Смещения и справедливость: кому будет больно, если модель ошибётся',
+   'Безопасность LLM: инъекции в промпт, утечки через контекст, ограничение прав инструментов',
+   'Стоимость ошибки как часть дизайна, а не как строчка в постмортеме'
+  ]},
+  {h:'Работа с людьми', items:[
+   'Декомпозиция задачи и честная оценка «сколько это займёт» с озвученной неопределённостью',
+   'Дизайн-док на одну–две страницы до того, как написан код',
+   'Объяснить результат не-ML-людям: без ROC-AUC, через деньги и риски',
+   'Ревью чужого кода и наставничество над джуном',
+   'Привычка читать статьи по своему направлению и хотя бы иногда воспроизводить'
+  ]}
+ ],
+ projects:[
+  {h:'Дизайн-док на реальную задачу', d:'Выбери сервис, которым пользуешься, и напиши дизайн ML-системы для одной его функции: метрики, данные, baseline, риски, план выката, что мониторим, во сколько обойдётся. Это же — типовое задание на собеседовании мидла.'},
+  {h:'Публичный разбор', d:'Пост или доклад по одному своему проекту: задача, решение, что не сработало, цифры. Умение объяснять — часть грейда.'}
+ ],
+ gate:[
+  'Беру размытую задачу и довожу до работающего решения без пошагового контроля',
+  'Отвечаю за метрику, а не за закрытый тикет',
+  'Спокойно веду ML System Design на собеседовании',
+  'Мне можно отдать джуна на ревью, и после этого код становится лучше'
+ ],
+ res:[
+  {t:'Machine Learning System Design Interview', u:'https://www.educative.io/blog/machine-learning-system-design-interview', n:'разбор формата и типовых задач'},
+  {t:'Chip Huyen: ML Interviews Book', u:'https://huyenchip.com/ml-interviews-book/', n:'бесплатно, про то, как устроен найм в ML'},
+  {t:'Rules of Machine Learning (Google)', u:'https://developers.google.com/machine-learning/guides/rules-of-ml', n:'43 правила от инженеров, читается за вечер'},
+  {t:'Papers with Code', u:'https://paperswithcode.com/', n:'статьи вместе с реализациями'}
+ ]
+}
+];
+
+var TRACKS = [
+{
+ id:'tr-cv', c:'var(--cv)', name:'Computer Vision', tag:'картинки',
+ lede:'Свёртки, предобученные бэкбоны и очень наглядная отладка: ошибку модели можно буквально увидеть.',
+ items:[
+  'Свёртка, пулинг, рецептивное поле — на пальцах и в коде',
+  'Аугментации (albumentations) и почему они важнее архитектуры',
+  'Transfer learning: взять предобученный бэкбон из `timm` и дообучить',
+  'ViT против CNN: когда что и почему трансформеры победили не везде',
+  'Обзорно: детекция (YOLO, DETR), сегментация (U-Net), метрики IoU и mAP',
+  'Инференс: препроцессинг должен совпадать с обучением до пикселя'
+ ],
+ project:'Собери свой датасет (300–500 фото на телефон — например, сортировка мусора или распознавание купюр), размечай, дообучи бэкбон, сделай скрипт инференса и демо на Gradio. Обязательный раздел: галерея из 20 ошибок с гипотезами, почему модель ошиблась.',
+ signal:'Тебе в кайф возиться с сырыми данными, разметкой и визуальной отладкой; нравится, когда результат видно глазами.',
+ res:[
+  {t:'CS231n', u:'https://cs231n.stanford.edu/', n:'классический стэнфордский курс по CV'},
+  {t:'timm', u:'https://huggingface.co/docs/timm/index', n:'библиотека предобученных моделей'},
+  {t:'albumentations', u:'https://albumentations.ai/docs/', n:'аугментации'}
+ ]
+},
+{
+ id:'tr-nlp', c:'var(--nlp)', name:'NLP', tag:'текст',
+ lede:'От tf-idf до BERT. Здесь становится понятно, откуда вырос весь современный GenAI.',
+ items:[
+  'Токенизация и BPE: почему модель видит не слова',
+  'Бейзлайн tf-idf + логрег — он неприлично хорош и обязателен для сравнения',
+  'Эмбеддинги слов и предложений, косинусная близость',
+  'RNN → attention → трансформер: разобрать архитектуру по слоям',
+  'Дообучение BERT-подобных моделей: классификация, NER',
+  'Метрики текста: F1 по сущностям, BLEU/ROUGE и почему им нельзя верить вслепую',
+  'Экосистема HuggingFace: `transformers`, `datasets`, `tokenizers`'
+ ],
+ project:'Классификация или NER на русском либо казахском тексте (отзывы, объявления, новости). Сравни tf-idf+логрег с дообученным трансформером на одной валидации, посчитай, во сколько раз дороже вторая модель, и напиши, стоила ли она того.',
+ signal:'Тебе интересно копаться в языке, разметке и в том, что модель «поняла» неправильно.',
+ res:[
+  {t:'HuggingFace NLP Course', u:'https://huggingface.co/learn/nlp-course', n:'бесплатно, с практикой'},
+  {t:'The Illustrated Transformer', u:'https://jalammar.github.io/illustrated-transformer/', n:'лучшее объяснение архитектуры'},
+  {t:'CS224n', u:'https://web.stanford.edu/class/cs224n/', n:'курс Стэнфорда по NLP'}
+ ]
+},
+{
+ id:'tr-gen', c:'var(--gen)', name:'GenAI и LLM', tag:'генерация',
+ lede:'Самый быстрорастущий рынок и самая обманчивая простота: сделать демо — час, сделать надёжно — отдельная профессия.',
+ items:[
+  'Как работает инференс: токены, сэмплинг, температура, top-p, контекстное окно',
+  'Промптинг всерьёз: структура, примеры, ограничение формата, структурированный вывод',
+  'Вызов инструментов (function calling) и почему агенты ломаются',
+  'Эмбеддинги и векторный поиск: FAISS, pgvector, Qdrant',
+  'RAG и его слабые места: чанкинг, качество ретривала, реранкер, цитирование',
+  'Оценка качества: свой golden set, RAGAS/DeepEval/promptfoo, регрессии при смене промпта',
+  'Дообучение: LoRA/QLoRA — когда оно реально нужно (обычно позже, чем кажется)',
+  'Локальный инференс и цена: vLLM, Ollama, квантизация; латентность и стоимость как метрики',
+  'Безопасность: инъекции в промпт, утечка контекста, ограничение прав инструментов'
+ ],
+ project:'RAG-ассистент по своим документам (конспекты, регламенты, база знаний) с честной оценкой: 50 вопросов с эталонными ответами, замер до и после реранкера, таблица «качество / латентность / стоимость запроса». Демо и отчёт — в репозиторий.',
+ signal:'Тебе нравятся короткие циклы, продуктовый эффект и задачи «как измерить то, что кажется неизмеримым».',
+ res:[
+  {t:'HuggingFace LLM Course', u:'https://huggingface.co/learn/llm-course', n:'от основ до дообучения'},
+  {t:'LLM Zoomcamp', u:'https://github.com/DataTalksClub/llm-zoomcamp', n:'бесплатный курс про LLM-приложения и RAG'},
+  {t:'nanoGPT / nanochat', u:'https://github.com/karpathy/nanochat', n:'весь цикл обучения чат-модели в читаемом коде'},
+  {t:'promptfoo', u:'https://www.promptfoo.dev/', n:'тесты и оценка промптов в CI'}
+ ]
+},
+{
+ id:'tr-spc', c:'var(--spc)', name:'Речь и аудио', tag:'звук',
+ lede:'Недооценённая ниша с жёсткими инженерными ограничениями и заметно меньшей конкуренцией.',
+ items:[
+  'Дискретизация, спектрограммы, mel-спектр и MFCC',
+  'ASR: Whisper и его семейство, размеры моделей, компромисс качество/скорость',
+  'VAD, шумоподавление, нарезка длинного аудио',
+  'Диаризация (кто говорит когда): pyannote',
+  'TTS: как устроен синтез и что такое естественность',
+  'WER как метрика: считать честно, с нормализацией текста',
+  'Стриминг и латентность: реальное время — отдельная инженерия'
+ ],
+ project:'Пайплайн «аудио → транскрипт → саммари» на 20 своих записях (лекции, созвоны, подкасты). Посчитай WER двух моделей разного размера, отдельно — на русском и казахском, и опиши, где модели проседают. Такой замер по локальным языкам — сам по себе редкий и ценный артефакт.',
+ signal:'Нравится сигнальная обработка, «железные» ограничения и работа в реальном времени.',
+ res:[
+  {t:'HuggingFace Audio Course', u:'https://huggingface.co/learn/audio-course', n:'бесплатно, от спектрограмм до ASR'},
+  {t:'Whisper', u:'https://github.com/openai/whisper', n:'модель и статья'},
+  {t:'pyannote.audio', u:'https://github.com/pyannote/pyannote-audio', n:'диаризация'}
+ ]
+},
+{
+ id:'tr-ds', c:'var(--ds)', name:'Аналитика и Data Science', tag:'решения',
+ lede:'Здесь модель часто не нужна вовсе — нужен корректный вывод. Навык, который делает любого ML-инженера полезнее.',
+ items:[
+  'Продуктовые метрики, когорты, retention',
+  'A/B-тест: дизайн, размер выборки, мощность, подглядывание, множественные сравнения',
+  'Бутстрап и непараметрика; CUPED обзорно',
+  'Каузальность: конфаундеры, DiD, matching — хотя бы на уровне «вижу подвох»',
+  'Временные ряды: тренд, сезонность, наивный baseline, ETS/ARIMA/Prophet',
+  'Дашборд и storytelling: одна страница, один вывод, одно действие'
+ ],
+ project:'Возьми открытые данные или логи своего пет-проекта, сформулируй гипотезу, посчитай эффект с доверительным интервалом и напиши отчёт на одну страницу с рекомендацией «делаем / не делаем» и честным перечнем ограничений.',
+ signal:'Кайфуешь от вопроса «а почему» и от того, что из-за твоего анализа кто-то поменял решение.',
+ res:[
+  {t:'Causal Inference for the Brave and True', u:'https://matheusfacure.github.io/python-causality-handbook/', n:'бесплатная книга с кодом'},
+  {t:'Forecasting: Principles and Practice', u:'https://otexts.com/fpp3/', n:'бесплатный учебник по временным рядам'},
+  {t:'Trustworthy Online Controlled Experiments', u:'https://experimentguide.com/', n:'библия A/B-тестов'}
+ ]
+},
+{
+ id:'tr-ops', c:'var(--ops)', name:'MLOps', tag:'инфраструктура',
+ lede:'Не отдельная профессия, а половина работы ML-инженера. Дегустация здесь нужна, чтобы понять, любишь ли ты, когда «работает у всех».',
+ items:[
+  'Docker для ML: образ для обучения и лёгкий образ для инференса',
+  'FastAPI-сервис вокруг модели: валидация входа, версия модели в ответе',
+  'CI на GitHub Actions: линт, тесты, сборка образа',
+  'Версионирование данных (DVC) и моделей (MLflow registry)',
+  'Мониторинг: латентность, ошибки, распределение входов, дрейф',
+  'Батч против онлайна, очереди, автоскейл — обзорно',
+  'Облако и деньги: хранилище, GPU-инстансы, что дороже всего'
+ ],
+ project:'Оберни модель из уровня 04 в сервис: Docker, FastAPI, тесты, CI, дашборд метрик, нагрузочный тест. Затем сознательно сломай что-нибудь (подсунь другое распределение данных) и покажи, что мониторинг это заметил.',
+ signal:'Тебе приятно, когда система не падает, и раздражает, когда «у меня локально работает».',
+ res:[
+  {t:'MLOps Zoomcamp', u:'https://github.com/DataTalksClub/mlops-zoomcamp', n:'полный бесплатный курс'},
+  {t:'FastAPI', u:'https://fastapi.tiangolo.com/', n:'документация как учебник'},
+  {t:'MLflow', u:'https://mlflow.org/docs/latest/index.html', n:'трекинг экспериментов и реестр моделей'}
+ ]
+}
+];
+
+var EXTRAS = [
+{
+ id:'x-portfolio', title:'Портфолио: три сильных проекта вместо тридцати туториалов',
+ lede:'На собеседовании смотрят не на количество, а на глубину одного. Сильный проект отличается от учебного пятью признаками.',
+ kind:'check',
+ blocks:[
+  {h:'Что делает проект сильным', items:[
+   'Данные, которых нет в чужих ноутбуках: свои, собранные, локальные, редкие',
+   'Задача сформулирована в терминах пользы, а не «применил модель X»',
+   'Честная валидация и обоснованный выбор метрики',
+   'Отдельный раздел «где ошибается и почему» — это то, что читают внимательнее всего',
+   'Работающее демо или сервис, который можно запустить одной командой',
+   'README с цифрами, графиками и выводами; история коммитов, а не один «init»'
+  ]},
+  {h:'Комплект к грейду мидла', items:[
+   'Один табличный проект с продовым уклоном (пайплайн, валидация, разбор ошибок)',
+   'Один проект в выбранном домене (CV / NLP / GenAI / речь / аналитика)',
+   'Один инженерный: модель в сервисе с мониторингом и цифрами по латентности и стоимости',
+   'Публичный след: пост, доклад или подробный разбор одного из проектов',
+   'Резюме, где про каждый проект написано «задача → что сделал → результат в цифрах»'
+  ]}
+ ],
+ res:[]
+},
+{
+ id:'x-interview', title:'Собеседование на мидла: четыре разных экзамена',
+ lede:'Их готовят по-разному, и провал обычно случается в той части, которую не тренировали.',
+ kind:'check',
+ blocks:[
+  {h:'Части', items:[
+   'Теория ML: смещение и разброс, регуляризация, метрики, утечки, валидация, как работает бустинг, что такое attention',
+   'Кодинг: чистый Python, pandas/SQL на живых данных, немного алгоритмов (словари, два указателя, сортировки)',
+   'ML System Design: спроектировать систему вслух за 40 минут — тренируется только повторением',
+   'Разбор своих проектов: задача, решения, компромиссы, результат в цифрах, что бы сделал иначе'
+  ]},
+  {h:'Как готовиться', items:[
+   'Составить список из 40 вопросов по теории и научиться отвечать вслух за две минуты',
+   'Прорешать SQL с оконными функциями и десяток задач на pandas',
+   'Провести минимум три mock-интервью — с человеком, а не в голове',
+   'Заранее написать и отрепетировать трёхминутный рассказ по каждому проекту',
+   'Свои вопросы работодателю: как устроен цикл выката модели, кто отвечает за данные, есть ли мониторинг'
+  ]}
+ ],
+ res:[
+  {t:'ML Interviews Book (Chip Huyen)', u:'https://huyenchip.com/ml-interviews-book/', n:'бесплатно'},
+  {t:'Rules of Machine Learning', u:'https://developers.google.com/machine-learning/guides/rules-of-ml', n:'много готовых ответов на вопросы про прод'}
+ ]
+},
+{
+ id:'x-traps', title:'Ловушки, в которые попадают почти все',
+ lede:'Каждая из них выглядит как усердие, а работает как топтание на месте.',
+ kind:'note',
+ neg:[
+  'Туториал-петля: пятый курс подряд без единого своего проекта. Признак — ты «понимаешь», но не можешь начать с чистого файла.',
+  'Бесконечная математика до первой модели. Математика догоняется по мере надобности, а мотивация — нет.',
+  'Погоня за SOTA: последняя архитектура вместо честной валидации. В проде выигрывает тот, у кого правильно нарезаны данные.',
+  'Ноутбук-помойка на 400 ячеек, который не запускается сверху вниз.',
+  'Коллекционирование библиотек вместо понимания одной насквозь.',
+  'Сравнение своего третьего месяца с чужим пятым годом в соцсетях.',
+  'ИИ-ассистент пишет код за тебя, пока ты не научился его читать. На этом этапе он полезен как объясняющий и как ревьюер, а не как автор.'
+ ],
+ pos:[
+  'Активный режим: сначала пробуешь сам, потом смотришь решение. Пассивный просмотр даёт иллюзию понимания.',
+  'Правило «объясни вслух»: если не можешь объяснить простыми словами — не понял.',
+  'Публичный лог: короткая заметка после каждого блока. Это же станет твоим портфолио и черновиком для постов.',
+  'Возвращение к пройденному: разобрать старый проект спустя время и переписать — быстрый способ увидеть рост.',
+  'Живое комьюнити: ODS, локальные митапы, чужие ревью. Одному учиться дольше и скучнее.'
+ ]
+},
+{
+ id:'x-lib', title:'Библиотека: куда возвращаться',
+ lede:'Короткий список, который закрывает почти всё. Не пытайся пройти всё — выбирай под текущий уровень.',
+ kind:'links',
+ res:[
+  {t:'Учебник ШАД по ML', u:'https://education.yandex.ru/handbook/ml', n:'русский, от основ до глубокого обучения'},
+  {t:'Karpathy: Zero to Hero', u:'https://karpathy.ai/zero-to-hero.html', n:'нейросети руками, от нуля до GPT'},
+  {t:'Dive into Deep Learning', u:'https://d2l.ai/', n:'книга с кодом'},
+  {t:'ISLP', u:'https://www.statlearning.com/', n:'статистическое обучение, бесплатно'},
+  {t:'Mathematics for ML', u:'https://mml-book.github.io/', n:'математика ровно под ML'},
+  {t:'HuggingFace Learn', u:'https://huggingface.co/learn', n:'курсы по NLP, LLM, аудио, агентам'},
+  {t:'DataTalks.Club Zoomcamps', u:'https://datatalks.club/', n:'ML, MLOps, LLM, Data Engineering — бесплатно'},
+  {t:'Made With ML', u:'https://madewithml.com/', n:'инженерная часть ML'},
+  {t:'mlcourse.ai', u:'https://mlcourse.ai/', n:'открытый курс ODS'},
+  {t:'Kaggle', u:'https://www.kaggle.com/', n:'данные, соревнования, бесплатные GPU'},
+  {t:'Papers with Code', u:'https://paperswithcode.com/', n:'статьи с реализациями'},
+  {t:'ODS.ai', u:'https://ods.ai/', n:'русскоязычное сообщество'}
+ ]
+}
+];
+
+/* ============================ РЕНДЕР ============================ */
+
+var KEY='tropa-ml-progress-v1', OKEY='tropa-ml-open-v1';
+var done=new Set(), openSet=null;
+try{ var raw=localStorage.getItem(KEY); if(raw) done=new Set(JSON.parse(raw)); }catch(e){}
+try{ var oraw=localStorage.getItem(OKEY); if(oraw) openSet=new Set(JSON.parse(oraw)); }catch(e){}
+
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(Array.from(done))); }catch(e){} }
+function saveOpen(){
+  try{
+    var o=[]; document.querySelectorAll('details[data-key]').forEach(function(d){ if(d.open) o.push(d.dataset.key); });
+    localStorage.setItem(OKEY, JSON.stringify(o));
+  }catch(e){}
+}
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function fmt(s){
+  return esc(s).replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
+}
+function item(id, text, cls){
+  return '<li><label class="item'+(done.has(id)?' done':'')+(cls?' '+cls:'')+'" data-id="'+id+'">'+
+    '<input type="checkbox"'+(done.has(id)?' checked':'')+'><span class="tick" aria-hidden="true"></span>'+
+    '<span class="txt">'+fmt(text)+'</span></label></li>';
+}
+function resList(res){
+  if(!res || !res.length) return '';
+  return '<div class="res"><h4>Ресурсы</h4><ul>'+res.map(function(r){
+    return '<li><span><a href="'+r.u+'" target="_blank" rel="noopener">'+esc(r.t)+'</a>'+(r.n?' <span class="rn">— '+esc(r.n)+'</span>':'')+'</span></li>';
+  }).join('')+'</ul></div>';
+}
+
+var ids=[]; /* все id чекбоксов по секциям */
+function reg(sec, id){ ids.push({sec:sec, id:id}); return id; }
+
+function renderWaypoint(w){
+  var body='';
+  w.blocks.forEach(function(b,bi){
+    body+='<div class="block"><h4>'+esc(b.h)+'</h4><ul class="items">';
+    b.items.forEach(function(t,ii){ body+=item(reg(w.id, w.id+'-b'+bi+'-'+ii), t); });
+    body+='</ul></div>';
+  });
+  if(w.projects && w.projects.length){
+    body+='<div class="block"><h4>Проект</h4><div class="projects">';
+    w.projects.forEach(function(p,pi){
+      var pid=reg(w.id, w.id+'-p'+pi);
+      body+='<label class="proj'+(done.has(pid)?' done':'')+'" data-id="'+pid+'">'+
+        '<input type="checkbox"'+(done.has(pid)?' checked':'')+'><span class="tick" aria-hidden="true"></span>'+
+        '<span class="ptxt"><b>'+fmt(p.h)+'</b><span>'+fmt(p.d)+'</span></span></label>';
+    });
+    body+='</div></div>';
+  }
+  body+='<div class="gate"><h4>Гейт уровня</h4><p class="hint">Пока не отмечены все пункты — идти дальше можно, но возвращаться придётся.</p><ul class="items">';
+  w.gate.forEach(function(t,gi){ body+=item(reg(w.id, w.id+'-g'+gi), t); });
+  body+='</ul></div>';
+  body+=resList(w.res);
+
+  var isOpen = openSet ? openSet.has(w.id) : (w.id==='wp1');
+  return '<details class="wp" id="'+w.id+'" data-key="'+w.id+'"'+(isOpen?' open':'')+'>'+
+    '<summary><span class="num">'+w.num+'</span>'+
+    '<span class="whead"><h3 class="wtitle">'+esc(w.title)+'</h3><p class="wlede">'+esc(w.lede)+'</p></span>'+
+    '<span class="wp-side"><span class="bar"><i data-bar="'+w.id+'" style="width:0%"></i></span>'+
+    '<span class="count" data-count="'+w.id+'"></span></span></summary>'+
+    '<div class="wbody">'+body+'</div></details>';
+}
+
+function renderTrack(t){
+  var body='<div class="block"><h4>Что понять</h4><ul class="items">';
+  t.items.forEach(function(x,i){ body+=item(reg(t.id, t.id+'-i'+i), x); });
+  body+='</ul></div>';
+  var pid=reg(t.id, t.id+'-p');
+  body+='<div class="block"><h4>Мини-проект</h4><div class="projects">'+
+    '<label class="proj'+(done.has(pid)?' done':'')+'" data-id="'+pid+'">'+
+    '<input type="checkbox"'+(done.has(pid)?' checked':'')+'><span class="tick" aria-hidden="true"></span>'+
+    '<span class="ptxt"><span>'+fmt(t.project)+'</span></span></label></div></div>';
+  body+='<div class="signal"><b>Сигнал, что это твоё</b>'+esc(t.signal)+'</div>';
+  body+=resList(t.res);
+  var isOpen = openSet ? openSet.has(t.id) : false;
+  return '<details class="track" id="'+t.id+'" data-key="'+t.id+'" style="--c:'+t.c+'"'+(isOpen?' open':'')+'>'+
+    '<summary><span class="tname"><h4>'+esc(t.name)+'</h4><span class="tag">'+esc(t.tag)+'</span></span>'+
+    '<p class="tlede">'+esc(t.lede)+'</p>'+
+    '<span class="trow"><span class="bar"><i data-bar="'+t.id+'" style="width:0%"></i></span>'+
+    '<span class="count" data-count="'+t.id+'"></span></span></summary>'+
+    '<div class="tbody">'+body+'</div></details>';
+}
+
+function renderExtra(x){
+  var body='';
+  if(x.kind==='check'){
+    x.blocks.forEach(function(b,bi){
+      body+='<div class="block"><h4>'+esc(b.h)+'</h4><ul class="items">';
+      b.items.forEach(function(t,ii){ body+=item(reg(x.id, x.id+'-b'+bi+'-'+ii), t); });
+      body+='</ul></div>';
+    });
+  } else if(x.kind==='note'){
+    body+='<div class="block"><h4>Так не надо</h4><ul class="plain">'+x.neg.map(function(t){return '<li><span>'+fmt(t)+'</span></li>';}).join('')+'</ul></div>';
+    body+='<div class="block"><h4>Так работает</h4><ul class="plain pos">'+x.pos.map(function(t){return '<li><span>'+fmt(t)+'</span></li>';}).join('')+'</ul></div>';
+  }
+  body+=resList(x.res);
+  var isOpen = openSet ? openSet.has(x.id) : false;
+  return '<details class="wp" id="'+x.id+'" data-key="'+x.id+'"'+(isOpen?' open':'')+'>'+
+    '<summary><span class="num">·</span>'+
+    '<span class="whead"><h3 class="wtitle">'+esc(x.title)+'</h3><p class="wlede">'+esc(x.lede)+'</p></span>'+
+    '<span class="wp-side"><span class="chev">открыть</span></span></summary>'+
+    '<div class="wbody">'+body+'</div></details>';
+}
+
+/* сборка маршрута: 01–05, станция дегустации, 07–08 */
+var routeHtml='';
+WAYPOINTS.slice(0,5).forEach(function(w){ routeHtml+=renderWaypoint(w); });
+
+routeHtml+='<section class="station" id="wp6">'+
+  '<div class="station-head"><span class="num">06</span><div>'+
+  '<h3>Дегустация: шесть доменов, шесть мини-проектов</h3>'+
+  '<p>Единственный уровень, внутри которого нет порядка — треки равноправны и делаются в любой последовательности. Смысл не в том, чтобы освоить всё, а в том, чтобы честно попробовать каждое и заметить, где тебя не бесит отладка на двадцатом часу. После дегустации выбираешь одно основное направление и одно соседнее — и углубляешься именно в них.</p>'+
+  '</div></div><div class="tracks">';
+TRACKS.forEach(function(t){ routeHtml+=renderTrack(t); });
+routeHtml+='</div>'+
+  '<div class="note" style="margin-top:22px">'+
+  '<b>Как выбрать после дегустации.</b> Не по зарплатам в чужих постах, а по трём вопросам: в каком треке ты дольше всего сидел без принуждения; какая отладка тебя злила меньше всего; на что есть спрос там, где ты собираешься работать. Пересечение этих трёх ответов и есть твой профиль. Остальные треки не пропадают — они становятся твоим преимуществом: ML-инженер, который умеет и в аналитику, и в прод, стоит дороже узкого специалиста.'+
+  '</div></section>';
+
+WAYPOINTS.slice(5).forEach(function(w){ routeHtml+=renderWaypoint(w); });
+document.getElementById('route').innerHTML=routeHtml;
+
+var extrasHtml='<div class="sect-title">Сквозное: работает на всех уровнях</div>';
+EXTRAS.forEach(function(x){ extrasHtml+=renderExtra(x); });
+document.getElementById('extras').innerHTML=extrasHtml;
+
+/* рельс навигации */
+var railItems=[
+ {id:'wp1',num:'01',t:'Руки: Python'},
+ {id:'wp2',num:'02',t:'Данные и SQL'},
+ {id:'wp3',num:'03',t:'Математика по делу'},
+ {id:'wp4',num:'04',t:'Классический ML'},
+ {id:'wp5',num:'05',t:'Глубокое обучение'},
+ {id:'wp6',num:'06',t:'Дегустация доменов'},
+ {id:'wp7',num:'07',t:'Инженерная зрелость'},
+ {id:'wp8',num:'08',t:'Мышление мидла'}
+];
+document.getElementById('railList').innerHTML=railItems.map(function(r){
+  return '<li><a class="rlink" href="#'+r.id+'" data-rail="'+r.id+'"><span class="dot"></span>'+
+    '<span>'+esc(r.t)+' <span class="pct" data-railpct="'+r.id+'"></span></span></a></li>';
+}).join('');
+document.getElementById('railExtras').innerHTML=EXTRAS.map(function(x){
+  var short=x.title.split(':')[0];
+  return '<a href="#'+x.id+'" data-rail="'+x.id+'">'+esc(short)+'</a>';
+}).join('');
+
+/* прогресс */
+var CIRC=2*Math.PI*31;
+function pctOf(sec){
+  var list=ids.filter(function(o){return o.sec===sec;});
+  if(!list.length) return {d:0,n:0,p:0};
+  var d=list.filter(function(o){return done.has(o.id);}).length;
+  return {d:d,n:list.length,p:Math.round(d/list.length*100)};
+}
+function update(){
+  var total=ids.length, d=0;
+  ids.forEach(function(o){ if(done.has(o.id)) d++; });
+  var p= total? d/total : 0;
+  document.getElementById('doneN').textContent=d;
+  document.getElementById('totalN').textContent=total;
+  document.getElementById('ringPct').textContent=Math.round(p*100)+'%';
+  var rv=document.getElementById('ringVal');
+  rv.setAttribute('stroke-dashoffset', String(CIRC*(1-p)));
+  rv.style.opacity = p>0 ? '1' : '0';
+
+  var secs={};
+  ids.forEach(function(o){ secs[o.sec]=1; });
+  Object.keys(secs).forEach(function(s){
+    var st=pctOf(s);
+    var bar=document.querySelector('[data-bar="'+s+'"]');
+    if(bar) bar.style.width=st.p+'%';
+    var c=document.querySelector('[data-count="'+s+'"]');
+    if(c) c.textContent=st.d+'/'+st.n;
+  });
+  railItems.forEach(function(r){
+    var st, link=document.querySelector('[data-rail="'+r.id+'"]');
+    if(r.id==='wp6'){
+      var dd=0,nn=0;
+      TRACKS.forEach(function(t){ var s=pctOf(t.id); dd+=s.d; nn+=s.n; });
+      st={d:dd,n:nn,p:nn?Math.round(dd/nn*100):0};
+    } else st=pctOf(r.id);
+    var el=document.querySelector('[data-railpct="'+r.id+'"]');
+    if(el) el.textContent=st.p?st.p+'%':'';
+    if(link) link.dataset.state = st.p===100?'full':(st.p>0?'part':'none');
+  });
+}
+
+document.addEventListener('change', function(e){
+  var lab=e.target.closest('[data-id]');
+  if(!lab) return;
+  var id=lab.dataset.id;
+  if(e.target.checked){ done.add(id); lab.classList.add('done'); }
+  else { done.delete(id); lab.classList.remove('done'); }
+  save(); update();
+});
+document.addEventListener('toggle', function(e){
+  if(e.target.matches('details[data-key]')) saveOpen();
+}, true);
+
+document.getElementById('btnHide').addEventListener('click', function(){
+  var on=this.getAttribute('aria-pressed')==='true';
+  this.setAttribute('aria-pressed', on?'false':'true');
+  document.body.classList.toggle('hide-done', !on);
+});
+document.getElementById('btnAll').addEventListener('click', function(){
+  var all=document.querySelectorAll('details[data-key]');
+  var anyClosed=Array.prototype.some.call(all, function(d){ return !d.open; });
+  all.forEach(function(d){ d.open=anyClosed; });
+  this.textContent=anyClosed?'Свернуть всё':'Развернуть всё';
+  saveOpen();
+});
+document.getElementById('btnReset').addEventListener('click', function(){
+  if(!confirm('Снять все галочки? Прогресс не восстановить.')) return;
+  done=new Set(); save();
+  document.querySelectorAll('[data-id]').forEach(function(l){
+    l.classList.remove('done');
+    var i=l.querySelector('input'); if(i) i.checked=false;
+  });
+  update();
+});
+
+/* активный пункт рельса */
+if('IntersectionObserver' in window){
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(!en.isIntersecting) return;
+      document.querySelectorAll('[data-rail]').forEach(function(a){ a.classList.remove('active'); });
+      var a=document.querySelector('[data-rail="'+en.target.id+'"]');
+      if(a) a.classList.add('active');
+    });
+  }, {rootMargin:'-15% 0px -70% 0px'});
+  railItems.forEach(function(r){ var el=document.getElementById(r.id); if(el) obs.observe(el); });
+  EXTRAS.forEach(function(x){ var el=document.getElementById(x.id); if(el) obs.observe(el); });
+}
+
+update();
+})();
+</script>
+</body>
+</html>
