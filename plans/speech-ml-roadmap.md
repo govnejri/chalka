@@ -67,9 +67,9 @@
 - Объяснить, что делает `self` в методе класса
 
 ### Ресурсы
-- «Автоматизация рутинных задач с помощью Python» (Sweigart) — главы 1–9
+- Тренажёр [python-handbook](https://github.com/govnejri/python-handbook) — хендбук Яндекса «Основы Python»: теория, задачи, проверка в VS Code
 - numpy: официальный «NumPy: the absolute basics for beginners»
-- Практика: Exercism Python track
+- Практика: ядро тренажёра — 164 задачи, маршрут в его `PLAN.md`
 
 ---
 

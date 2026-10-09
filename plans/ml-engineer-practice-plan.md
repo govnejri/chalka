@@ -121,10 +121,10 @@
 
 **Артефакт:** репозиторий со скриптом обработки CSV + графики
 
-**Теория:** Sweigart гл. 1–9 по мере надобности. numpy «absolute basics».
+**Теория:** тренажёр [python-handbook](https://github.com/govnejri/python-handbook) — страница параграфа перед его задачами. numpy «absolute basics».
 
 **Практика:**
-1. 40 задач на Exercism
+1. Ядро тренажёра python-handbook — 164 задачи, маршрут в его `PLAN.md`
 2. Скрипт: CSV → статистики → графики → сохранение
 3. Класс с методами — потренировать ООП руками
 4. Настроить venv, git, `.gitignore`, README

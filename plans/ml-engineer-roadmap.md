@@ -57,7 +57,7 @@
 - Объяснить broadcasting на сложении `(3,1)` и `(1,4)`
 
 ### Ресурсы
-Sweigart «Автоматизация рутинных задач с Python» гл. 1–9 · «NumPy: absolute basics» · Exercism Python
+Тренажёр [python-handbook](https://github.com/govnejri/python-handbook) — хендбук Яндекса «Основы Python» с задачами и проверкой, маршрут в его `PLAN.md` · «NumPy: absolute basics»
 
 ---
 
